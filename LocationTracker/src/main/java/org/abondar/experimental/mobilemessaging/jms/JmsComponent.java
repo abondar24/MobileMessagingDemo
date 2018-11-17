@@ -7,7 +7,6 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
-import javax.jms.Message;
 import javax.jms.TextMessage;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,28 +23,17 @@ public class JmsComponent {
     private static final Logger logger = LogManager.getLogger();
 
     @JmsListener(destination = "${jsa.activemq.queue.stomp}")
-    public void receiveTestMessage(final TextMessage msg) throws Exception {
+    public void receiveMessage(final TextMessage msg) throws Exception {
         printMessage(msg);
     }
 
     @SendTo("${jsa.activemq.queue.stomp}")
-    public String sendTestMessage(TestModel msg) throws Exception {
+    public String sendMessage(TestModel msg) throws Exception {
         var jsonMsg = om.writeValueAsString(msg);
         logger.info("Sending to broker: "+ jsonMsg);
         return jsonMsg;
     }
 
-    @JmsListener(destination = "${jsa.activemq.queue.mqtt}")
-    public void receiveTestMqttMessage(final TextMessage msg) throws Exception {
-        printMessage(msg);
-    }
-
-    @SendTo("${jsa.activemq.queue.mqtt}")
-    public String sendTestMqttMessage(TestModel msg) throws Exception {
-        var jsonMsg = om.writeValueAsString(msg);
-        logger.info("Sending to broker: "+ jsonMsg);
-        return jsonMsg;
-    }
 
     private void printMessage(TextMessage msg) throws JMSException, IOException {
         String data;

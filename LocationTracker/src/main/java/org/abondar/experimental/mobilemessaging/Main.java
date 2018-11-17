@@ -22,8 +22,7 @@ public class Main {
 
     private static void sendTest()throws Exception {
         var msg = new TestModel(24L,"Alex");
-        jmsComponent.sendTestMessage(msg);
-        jmsComponent.sendTestMqttMessage(msg);
+        jmsComponent.sendMessage(msg);
     }
 
 
