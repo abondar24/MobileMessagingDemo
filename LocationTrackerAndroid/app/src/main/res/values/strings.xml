@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Location Tracker</string>
+    <string name="action_settings">Settings</string>
+    <string name="device_id">Device ID: </string>
+    <string name="location_lat">Device Latitude: </string>
+    <string name="location_lon">Device Longitude: </string>
+    <string name="location_alt">Device Altitude: </string>
+
+
+</resources>
