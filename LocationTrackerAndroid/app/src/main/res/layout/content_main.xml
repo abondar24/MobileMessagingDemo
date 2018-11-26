@@ -1,34 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".MainActivity"
+    android:orientation="vertical"
     tools:showIn="@layout/activity_main">
-
-    <TextView
-        android:id="@+id/location_lat"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:text="@string/location_lat"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.283" />
-
-    <TextView
-        android:id="@+id/location_lon"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:text="@string/location_lon"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.195" />
 
     <TextView
         android:id="@+id/id_text"
@@ -42,16 +21,67 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.027" />
 
-    <TextView
-        android:id="@+id/location_alt"
-        android:layout_width="wrap_content"
-        android:layout_height="31dp"
-        android:text="@string/location_alt"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.113" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/location_lat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/location_lat" />
+        <TextView
+            android:id="@+id/location_lat_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/location_lat"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/location_lat"
+            android:text="" />
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/location_lon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/location_lon"/>
+        <TextView
+            android:id="@+id/location_lon_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/location_lon"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/location_lon"
+            android:text=""/>
+    </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/location_alt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/location_alt" />
+
+        <TextView
+            android:id="@+id/location_alt_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/location_alt"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/location_alt"
+            android:text=""
+            />
+    </RelativeLayout>
+
+</LinearLayout>

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -11,7 +12,6 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -69,22 +69,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         TextView idView = this.findViewById(R.id.id_text);
         idView.append(getDeviceId());
 
-        LocationManager lm = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 20, 0.5f, this);
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
 
-        latView = this.findViewById(R.id.location_lat);
-        lonView = this.findViewById(R.id.location_lon);
-        altView = this.findViewById(R.id.location_alt);
-
-        if (locationData!=null){
-            latView.append(locationData.getLatitiude());
-            lonView.append(locationData.getLongitude());
-            altView.append(locationData.getAltitude());
-        }
-
+        latView = this.findViewById(R.id.location_alt_val);
+        lonView = this.findViewById(R.id.location_lat_val);
+        altView = this.findViewById(R.id.location_lon_val);
 
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,14 +103,15 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onLocationChanged(Location location) {
         Log.i(ACTIVITY_SERVICE, location.toString());
-        String lat = String.valueOf(location.getLatitude());
-        String lon = String.valueOf(location.getLongitude());
-        String alt = String.valueOf(location.getAltitude());
+        String lat = convertToString(location.getLatitude());
+        String lon = convertToString(location.getLongitude());
+        String alt = convertToString(location.getAltitude());
 
         locationData = new LocationData(lat, lon, alt);
-        latView.append(locationData.getLatitiude());
-        lonView.append(locationData.getLongitude());
-        altView.append(locationData.getAltitude());
+
+        latView.setText(locationData.getLatitiude());
+        lonView.setText(locationData.getLongitude());
+        altView.setText(locationData.getAltitude());
     }
 
     @Override
@@ -156,4 +149,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
 
+    private String convertToString(double val){
+        return  String.valueOf(Math.round(val * 100.0) / 100.0);
+    }
 }
