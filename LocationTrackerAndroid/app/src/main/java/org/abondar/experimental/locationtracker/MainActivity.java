@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -21,6 +20,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private TextView latView;
     private TextView lonView;
     private TextView altView;
+    private TextView idView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,43 +42,37 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_PHONE_STATE},
-                    PermissionCodes.IMEI.getCode());
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION},
-                    PermissionCodes.LOCATION.getCode());
-
-        }
-
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-
-        TextView idView = this.findViewById(R.id.id_text);
-        idView.append(getDeviceId());
-
-        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+       requestPermissions();
+        idView = this.findViewById(R.id.id_text);
 
         latView = this.findViewById(R.id.location_alt_val);
         lonView = this.findViewById(R.id.location_lat_val);
         altView = this.findViewById(R.id.location_lon_val);
 
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+
+        PermissionCodes code = PermissionCodes.byCode(requestCode);
+        switch (code) {
+            case LOCATION:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    idView.append(getDeviceId());
+
+                    if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+                        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+                    }
+
+                }
+          break;
+        }
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -109,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         locationData = new LocationData(lat, lon, alt);
 
-        latView.setText(locationData.getLatitiude());
+        latView.setText(locationData.getLatitude());
         lonView.setText(locationData.getLongitude());
         altView.setText(locationData.getAltitude());
     }
@@ -127,6 +123,25 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     @Override
     public void onProviderDisabled(String s) {
 
+    }
+
+    private void requestPermissions(){
+        String[] permissions= new String[]{
+                Manifest.permission.READ_PHONE_STATE,
+                Manifest.permission.ACCESS_FINE_LOCATION};
+
+        int result;
+        List<String> listPermissionsNeeded = new ArrayList<>();
+        for (String p:permissions) {
+            result = checkSelfPermission(p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
+                    PermissionCodes.LOCATION.getCode());
+        }
     }
 
     @SuppressLint("HardwareIds")
@@ -150,6 +165,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
 
     private String convertToString(double val){
-        return  String.valueOf(Math.round(val * 100.0) / 100.0);
+        return  String.valueOf(Math.round(val * 1000000.0) / 1000000.0);
     }
 }

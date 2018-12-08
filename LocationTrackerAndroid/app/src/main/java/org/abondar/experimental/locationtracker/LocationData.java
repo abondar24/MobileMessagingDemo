@@ -1,24 +1,24 @@
 package org.abondar.experimental.locationtracker;
 
 public class LocationData {
-    private String latitiude;
+    private String latitude;
     private String longitude;
     private String altitude;
 
-    public LocationData(String latitiude, String longitude, String altitude) {
-        this.latitiude = latitiude;
+    public LocationData(String latitude, String longitude, String altitude) {
+        this.latitude = latitude;
         this.longitude = longitude;
         this.altitude = altitude;
     }
 
     public LocationData(){}
 
-    public String getLatitiude() {
-        return latitiude;
+    public String getLatitude() {
+        return latitude;
     }
 
-    public void setLatitiude(String latitiude) {
-        this.latitiude = latitiude;
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
     }
 
     public String getLongitude() {

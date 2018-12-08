@@ -1,8 +1,8 @@
 package org.abondar.experimental.locationtracker;
 
 public enum PermissionCodes {
-    IMEI(24),
-    LOCATION(27);
+    UNDEFINED(-1),
+    LOCATION(24);
 
     private Integer code;
 
@@ -12,5 +12,17 @@ public enum PermissionCodes {
 
     public Integer getCode() {
         return code;
+    }
+
+    public static PermissionCodes byCode(final int code){
+
+
+        for (PermissionCodes codes: values()){
+            if (codes.code==code){
+              return codes;
+            }
+        }
+
+        return UNDEFINED;
     }
 }
