@@ -30,7 +30,7 @@ public class JmsComponent {
     @SendTo("${jsa.activemq.queue.stomp}")
     public String sendMessage(TestModel msg) throws Exception {
         var jsonMsg = om.writeValueAsString(msg);
-        logger.info("Sending to broker: "+ jsonMsg);
+        logger.info("Sending to broker: " + jsonMsg);
         return jsonMsg;
     }
 
@@ -38,11 +38,10 @@ public class JmsComponent {
     private void printMessage(TextMessage msg) throws JMSException, IOException {
         String data;
 
-            var tm = (TextMessage) msg;
-            data = tm.getText();
+        data = msg.getText();
 
-            var test = om.readValue(data, TestModel.class);
-            logger.info("Got message from broker: "+test);
+        var test = om.readValue(data, TestModel.class);
+        logger.info("Got message from broker: " + test);
 
     }
 }
