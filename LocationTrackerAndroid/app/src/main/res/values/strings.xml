@@ -6,5 +6,7 @@
     <string name="location_lon">Device Longitude: </string>
     <string name="location_alt">Device Altitude: </string>
     <string name="location_val_def">No data available</string>
+    <string name="content_authority">org.abondar.experimental.locationtracker</string>
+    <string name="sync_account_type">locationtracker.abondar.org</string>
 
 </resources>
