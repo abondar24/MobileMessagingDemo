@@ -1,7 +1,7 @@
 package org.abondar.experimental.mobilemessaging.jms;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.abondar.experimental.mobilemessaging.model.TestModel;
+import org.abondar.experimental.mobilemessaging.model.LocationData;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Component;
@@ -27,8 +27,9 @@ public class JmsComponent {
         printMessage(msg);
     }
 
+
     @SendTo("${jsa.activemq.queue.stomp}")
-    public String sendMessage(TestModel msg) throws Exception {
+    public String sendMessage(LocationData msg) throws Exception {
         var jsonMsg = om.writeValueAsString(msg);
         logger.info("Sending to broker: " + jsonMsg);
         return jsonMsg;
@@ -40,7 +41,7 @@ public class JmsComponent {
 
         data = msg.getText();
 
-        var test = om.readValue(data, TestModel.class);
+        var test = om.readValue(data, LocationData.class);
         logger.info("Got message from broker: " + test);
 
     }

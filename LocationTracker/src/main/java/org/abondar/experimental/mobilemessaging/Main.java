@@ -1,6 +1,6 @@
 package org.abondar.experimental.mobilemessaging;
 
-import org.abondar.experimental.mobilemessaging.model.TestModel;
+import org.abondar.experimental.mobilemessaging.model.LocationData;
 import org.abondar.experimental.mobilemessaging.jms.JmsComponent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
@@ -21,8 +21,9 @@ public class Main {
     }
 
     private static void sendTest()throws Exception {
-        var msg = new TestModel(24L,"Alex");
-        jmsComponent.sendMessage(msg);
+        var testData = new LocationData("55.1111","56.11111","57.888");
+        testData.setDeviceId("ffff-fffff");
+        jmsComponent.sendMessage(testData);
     }
 
 
