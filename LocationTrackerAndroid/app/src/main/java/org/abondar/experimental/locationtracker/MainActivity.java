@@ -21,6 +21,10 @@ import java.util.UUID;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import org.abondar.experimental.locationtracker.data.LocationData;
+import org.abondar.experimental.locationtracker.sync.LocationSyncAdapter;
+import org.abondar.experimental.locationtracker.util.PermissionCodes;
+
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
 
@@ -30,8 +34,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     private TextView lonView;
     private TextView altView;
     private TextView idView;
-
-    private LocationManager lm;
+    private String deviceId;
+    private  LocationManager lm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED ) {
-            idView.append(getDeviceId());
+            deviceId=getDeviceId();
+            idView.append(deviceId);
+
         }
 
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
@@ -59,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
         }
 
+        LocationSyncAdapter.initializeSyncAdapter(this);
 
-//        LocationSyncAdapter.initializeSyncAdapter(this);
     }
 
     @Override
@@ -116,6 +122,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         String alt = convertToString(location.getAltitude());
 
         locationData = new LocationData(lat, lon, alt);
+        locationData.setDeviceId(deviceId);
+
+        LocationSyncAdapter.setLocationData(locationData);
 
         latView.setText(locationData.getLatitude());
         lonView.setText(locationData.getLongitude());
@@ -154,6 +163,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
                     PermissionCodes.LOCATION.getCode());
         }
+
+
     }
 
     @SuppressLint("HardwareIds")

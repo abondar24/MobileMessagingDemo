@@ -1,4 +1,4 @@
-package org.abondar.experimental.locationtracker;
+package org.abondar.experimental.locationtracker.util;
 
 public enum PermissionCodes {
     UNDEFINED(-1),
