@@ -21,21 +21,31 @@ import java.util.UUID;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.abondar.experimental.locationtracker.data.LocationData;
-import org.abondar.experimental.locationtracker.sync.LocationSyncAdapter;
+import org.abondar.experimental.locationtracker.util.ConnectionUtil;
 import org.abondar.experimental.locationtracker.util.PermissionCodes;
+
+import ua.naiksoftware.stomp.Stomp;
+import ua.naiksoftware.stomp.client.StompClient;
+
+import static org.abondar.experimental.locationtracker.util.ConnectionUtil.STOMP_ENDPOINT;
+import static org.abondar.experimental.locationtracker.util.ConnectionUtil.STOMP_URI;
+import static org.abondar.experimental.locationtracker.util.ConnectionUtil.STOMP_PORT;
 
 
 public class MainActivity extends AppCompatActivity implements LocationListener {
-
-    private LocationData locationData;
 
     private TextView latView;
     private TextView lonView;
     private TextView altView;
     private TextView idView;
     private String deviceId;
-    private  LocationManager lm;
+    private LocationManager lm;
+    private StompClient stompClient;
+    private ObjectMapper mapper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,19 +63,17 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         altView = this.findViewById(R.id.location_lon_val);
 
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED ) {
-            deviceId=getDeviceId();
-            idView.append(deviceId);
-
-        }
-
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
-            lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-            lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+        fillDeviceId();
         }
 
-        LocationSyncAdapter.initializeSyncAdapter(this);
+        enableLocation();
+
+        mapper = new ObjectMapper();
+        stompClient = Stomp.over(Stomp.ConnectionProvider.JWS,
+                STOMP_URI + STOMP_PORT + STOMP_ENDPOINT);
+        stompClient.connect();
+
 
     }
 
@@ -78,16 +86,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             case LOCATION:
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    idView.append(getDeviceId());
-
-                    if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED) {
-                        lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-                        lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-                    }
-
+                  fillDeviceId();
+                  enableLocation();
                 }
-          break;
+                break;
         }
     }
 
@@ -121,10 +123,10 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         String lon = convertToString(location.getLongitude());
         String alt = convertToString(location.getAltitude());
 
-        locationData = new LocationData(lat, lon, alt);
+        LocationData locationData = new LocationData(lat, lon, alt);
         locationData.setDeviceId(deviceId);
 
-        LocationSyncAdapter.setLocationData(locationData);
+        sendToQueue(locationData);
 
         latView.setText(locationData.getLatitude());
         lonView.setText(locationData.getLongitude());
@@ -146,14 +148,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
 
     }
 
-    private void requestPermissions(){
-        String[] permissions= new String[]{
+    private void requestPermissions() {
+        String[] permissions = new String[]{
                 Manifest.permission.READ_PHONE_STATE,
                 Manifest.permission.ACCESS_FINE_LOCATION};
 
         int result;
         List<String> listPermissionsNeeded = new ArrayList<>();
-        for (String p:permissions) {
+        for (String p : permissions) {
             result = checkSelfPermission(p);
             if (result != PackageManager.PERMISSION_GRANTED) {
                 listPermissionsNeeded.add(p);
@@ -168,8 +170,8 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
     @SuppressLint("HardwareIds")
-    private String getDeviceId(){
-        try{
+    private String getDeviceId() {
+        try {
             final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
 
             final String tmDevice, tmSerial, androidId;
@@ -178,16 +180,69 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(),
                     android.provider.Settings.Secure.ANDROID_ID);
 
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long)tmDevice.hashCode() << 32) | tmSerial.hashCode());
+            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
             return deviceUuid.toString();
-        } catch (SecurityException ex){
+        } catch (SecurityException ex) {
             Log.e(ACTIVITY_SERVICE, "getDeviceId: ", ex);
         }
         return "id is not available";
     }
 
 
-    private String convertToString(double val){
-        return  String.valueOf(Math.round(val * 1000000.0) / 1000000.0);
+    private String convertToString(double val) {
+        return String.valueOf(Math.round(val * 1000000.0) / 1000000.0);
+    }
+
+    private void sendToQueue(LocationData locationData) {
+        if (locationData == null) {
+            Log.e(ACTIVITY_SERVICE, "Nothing to send");
+            return;
+
+        }
+
+        String json = "";
+
+        try {
+            json = mapper.writeValueAsString(locationData);
+        } catch (JsonProcessingException ex) {
+            Log.e(ACTIVITY_SERVICE, "Empty location data");
+        }
+
+        stompClient.send(ConnectionUtil.STOMP_QUEUE, json).subscribe(() ->
+                Log.i(ACTIVITY_SERVICE, "Sent to broker "+locationData));
+
+
+    }
+
+    @Override
+    public void onDestroy() {
+        stompClient.disconnect();
+        super.onDestroy();
+    }
+
+    private void fillDeviceId(){
+        deviceId = getDeviceId();
+        idView.append(deviceId);
+    }
+
+    private void enableLocation(){
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+            lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+            boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+            boolean isNetworkEnabled =lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+            if (isNetworkEnabled) {
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
+            }
+
+            if (isGPSEnabled){
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
+            }
+
+
+        }
+
     }
 }
