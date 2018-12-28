@@ -208,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
             Log.e(ACTIVITY_SERVICE, "Empty location data");
         }
 
-        stompClient.send(ConnectionUtil.STOMP_QUEUE, json).subscribe(() ->
+        stompClient.send(ConnectionUtil.STOMP_TOPIC, json).subscribe(() ->
                 Log.i(ACTIVITY_SERVICE, "Sent to broker "+locationData));
 
 

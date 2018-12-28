@@ -22,13 +22,13 @@ public class JmsComponent {
 
     private static final Logger logger = LogManager.getLogger();
 
-    @JmsListener(destination = "${jsa.activemq.queue.stomp}")
+    @JmsListener(destination = "${jsa.activemq.topic.stomp}")
     public void receiveMessage(final TextMessage msg) throws Exception {
         printMessage(msg);
     }
 
 
-    @SendTo("${jsa.activemq.queue.stomp}")
+    @SendTo("${jsa.activemq.topic.stomp}")
     public String sendMessage(LocationData msg) throws Exception {
         var jsonMsg = om.writeValueAsString(msg);
         logger.info("Sending to broker: " + jsonMsg);

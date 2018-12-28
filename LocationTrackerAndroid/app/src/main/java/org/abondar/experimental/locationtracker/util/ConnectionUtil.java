@@ -5,5 +5,5 @@ public class ConnectionUtil {
     private static final  String HOST = "shamanbox-51";
     public static final String STOMP_URI ="ws://"+HOST+":";
     public static final String STOMP_ENDPOINT ="/";
-    public static final String STOMP_QUEUE="stomp.queue";
+    public static final String STOMP_TOPIC ="stomp.topic";
 }
