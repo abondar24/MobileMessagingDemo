@@ -58,9 +58,9 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         requestPermissions();
         idView = this.findViewById(R.id.id_text);
 
-        latView = this.findViewById(R.id.location_alt_val);
-        lonView = this.findViewById(R.id.location_lat_val);
-        altView = this.findViewById(R.id.location_lon_val);
+        latView = this.findViewById(R.id.location_lat_val);
+        lonView = this.findViewById(R.id.location_lon_val);
+        altView = this.findViewById(R.id.location_alt_val);
 
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
