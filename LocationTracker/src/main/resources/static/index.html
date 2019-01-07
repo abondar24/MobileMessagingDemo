@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="width=device-width" name="viewport">
+    <meta charset="utf-8">
+    <title>Location tracker</title>
+</head>
+<body>
+   <h1>Location tracker</h1>
+   <form id="connect_form">
+       <fieldset>
+           <button id="connect_button" type="submit">Connect</button>
+           <button id="disconnect_button" disabled>Disconnect</button>
+           Device: <select id="deviceID"></select>
+           <br>
+       </fieldset>
+   </form>
+
+   <div id="map-canvas" style="height:512px; width:100%; padding:0; margin:0">
+   </div>
+
+   <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+   <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false"></script>
+   <script src="js/main.js" type="module"></script>
+
+</body>
+</html>
