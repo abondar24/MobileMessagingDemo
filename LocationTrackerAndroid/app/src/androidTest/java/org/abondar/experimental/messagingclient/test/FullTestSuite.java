@@ -1,4 +1,4 @@
-package org.abondar.experimental.locationtracker.test;
+package org.abondar.experimental.messagingclient.test;
 
 import junit.framework.TestSuite;
 

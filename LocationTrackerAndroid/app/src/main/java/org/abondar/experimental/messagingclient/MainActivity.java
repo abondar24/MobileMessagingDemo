@@ -1,12 +1,9 @@
-package org.abondar.experimental.locationtracker;
+package org.abondar.experimental.messagingclient;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
@@ -21,29 +18,23 @@ import java.util.UUID;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.abondar.experimental.locationtracker.data.LocationData;
-import org.abondar.experimental.locationtracker.util.ConnectionUtil;
-import org.abondar.experimental.locationtracker.util.PermissionCodes;
+import org.abondar.experimental.messagingclient.util.PermissionCodes;
 
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-import static org.abondar.experimental.locationtracker.util.ConnectionUtil.STOMP_ENDPOINT;
-import static org.abondar.experimental.locationtracker.util.ConnectionUtil.STOMP_URI;
-import static org.abondar.experimental.locationtracker.util.ConnectionUtil.STOMP_PORT;
+import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_ENDPOINT;
+import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_URI;
+import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_PORT;
 
 
-public class MainActivity extends AppCompatActivity implements LocationListener {
+public class MainActivity extends AppCompatActivity  {
 
-    private TextView latView;
-    private TextView lonView;
-    private TextView altView;
+
     private TextView idView;
     private String deviceId;
-    private LocationManager lm;
     private StompClient stompClient;
     private ObjectMapper mapper;
 
@@ -58,18 +49,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         requestPermissions();
         idView = this.findViewById(R.id.id_text);
 
-        latView = this.findViewById(R.id.location_lat_val);
-        lonView = this.findViewById(R.id.location_lon_val);
-        altView = this.findViewById(R.id.location_alt_val);
-
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
         fillDeviceId();
         }
 
-        enableLocation();
-
-        mapper = new ObjectMapper();
+      mapper = new ObjectMapper();
         stompClient = Stomp.over(Stomp.ConnectionProvider.JWS,
                 STOMP_URI + STOMP_PORT + STOMP_ENDPOINT);
         stompClient.connect();
@@ -87,7 +72,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                   fillDeviceId();
-                  enableLocation();
                 }
                 break;
         }
@@ -116,37 +100,6 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        Log.i(ACTIVITY_SERVICE, location.toString());
-        String lat = convertToString(location.getLatitude());
-        String lon = convertToString(location.getLongitude());
-        String alt = convertToString(location.getAltitude());
-
-        LocationData locationData = new LocationData(lat, lon, alt);
-        locationData.setDeviceId(deviceId);
-
-        sendToQueue(locationData);
-
-        latView.setText(locationData.getLatitude());
-        lonView.setText(locationData.getLongitude());
-        altView.setText(locationData.getAltitude());
-    }
-
-    @Override
-    public void onStatusChanged(String s, int i, Bundle bundle) {
-
-    }
-
-    @Override
-    public void onProviderEnabled(String s) {
-
-    }
-
-    @Override
-    public void onProviderDisabled(String s) {
-
-    }
 
     private void requestPermissions() {
         String[] permissions = new String[]{
@@ -189,30 +142,7 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
     }
 
 
-    private String convertToString(double val) {
-        return String.valueOf(Math.round(val * 1000000.0) / 1000000.0);
-    }
 
-    private void sendToQueue(LocationData locationData) {
-        if (locationData == null) {
-            Log.e(ACTIVITY_SERVICE, "Nothing to send");
-            return;
-
-        }
-
-        String json = "";
-
-        try {
-            json = mapper.writeValueAsString(locationData);
-        } catch (JsonProcessingException ex) {
-            Log.e(ACTIVITY_SERVICE, "Empty location data");
-        }
-
-        stompClient.send(ConnectionUtil.STOMP_TOPIC, json).subscribe(() ->
-                Log.i(ACTIVITY_SERVICE, "Sent to broker "+locationData));
-
-
-    }
 
     @Override
     public void onDestroy() {
@@ -225,24 +155,5 @@ public class MainActivity extends AppCompatActivity implements LocationListener 
         idView.append(deviceId);
     }
 
-    private void enableLocation(){
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-            lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
-            boolean isGPSEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            boolean isNetworkEnabled =lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-
-            if (isNetworkEnabled) {
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, this);
-            }
-
-            if (isGPSEnabled){
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
-            }
-
-
-        }
-
-    }
 }

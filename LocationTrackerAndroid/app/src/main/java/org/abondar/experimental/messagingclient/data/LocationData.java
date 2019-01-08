@@ -1,4 +1,4 @@
-package org.abondar.experimental.locationtracker.data;
+package org.abondar.experimental.messagingclient.data;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

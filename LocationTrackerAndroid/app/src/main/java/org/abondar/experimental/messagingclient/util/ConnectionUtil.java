@@ -1,4 +1,4 @@
-package org.abondar.experimental.locationtracker.util;
+package org.abondar.experimental.messagingclient.util;
 
 public class ConnectionUtil {
     public static final String STOMP_PORT="61614";

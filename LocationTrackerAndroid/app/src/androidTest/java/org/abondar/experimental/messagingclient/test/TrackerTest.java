@@ -1,9 +1,9 @@
-package org.abondar.experimental.locationtracker.test;
+package org.abondar.experimental.messagingclient.test;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.abondar.experimental.locationtracker.data.LocationData;
+import org.abondar.experimental.messagingclient.data.LocationData;
 import org.junit.Before;
 import org.junit.Test;
 
