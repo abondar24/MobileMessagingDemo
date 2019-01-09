@@ -5,9 +5,13 @@
     <meta charset="utf-8">
     <title>Location tracker</title>
     <style>
+        html,
+        body,
         #map {
             height: 100%;
+            width:100%;
         }
+        .gm-style img{max-height:none;}
     </style>
 </head>
 <body>
@@ -24,10 +28,9 @@
 <div id="map"></div>
 
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBmZgtnAv8m2V8bYJOY3U5RWl4izvQBqAs&callback=initmap"></script>
-
 <script src="js/location.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=MY_KEY&callback=initmap" async defer></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
 
-
+</body>
 </html>

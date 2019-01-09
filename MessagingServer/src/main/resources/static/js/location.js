@@ -1,13 +1,14 @@
 let map;
-Window.initmap =  function initmap() {
+
+window.initmap=function () {
     let mapOptions = {
         zoom: 8,
-        center: new google.maps.LatLng(30, 0),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        center: {lat: 49, lng: 8},
     };
-    map = new google.maps.Map(document.getElementById("map"), mapOptions)
+    map = new google.maps.Map(document.getElementById('map'), mapOptions);
 
 };
+
 
 $(document).ready(function () {
     let url = "ws://localhost:61614/";
