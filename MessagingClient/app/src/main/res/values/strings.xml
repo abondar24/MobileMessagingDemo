@@ -1,12 +1,14 @@
 <resources>
-    <string name="app_name">Location Tracker</string>
+    <string name="app_name">Mobile Messaging Client</string>
     <string name="action_settings">Settings</string>
     <string name="device_id">Device ID: </string>
     <string name="location_lat">Device Latitude: </string>
     <string name="location_lon">Device Longitude: </string>
     <string name="location_alt">Device Altitude: </string>
     <string name="location_val_def">No data available</string>
-    <string name="content_authority">org.abondar.experimental.locationtracker</string>
-    <string name="sync_account_type">locationtracker.abondar.org</string>
+    <string name="location_button">Track location</string>
+    <string name="motion_button">Detect motions</string>
+    <string name="content_authority">org.abondar.experimental.messagingclient</string>
+    <string name="sync_account_type">messagingclient.abondar.org</string>
 
 </resources>

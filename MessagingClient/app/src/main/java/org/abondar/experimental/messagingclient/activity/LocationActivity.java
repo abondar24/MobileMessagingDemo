@@ -1,4 +1,4 @@
-package org.abondar.experimental.messagingclient;
+package org.abondar.experimental.messagingclient.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.abondar.experimental.messagingclient.R;
 import org.abondar.experimental.messagingclient.data.LocationData;
 import org.abondar.experimental.messagingclient.util.ConnectionUtil;
 import org.abondar.experimental.messagingclient.util.PermissionCodes;
@@ -35,13 +36,12 @@ import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP
 import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_PORT;
 import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_URI;
 
-public class LocationTrackerActivity extends AppCompatActivity implements LocationListener {
+public class LocationActivity extends AppCompatActivity implements LocationListener {
     private TextView latView;
     private TextView lonView;
     private TextView altView;
-    private TextView idView;
-    private String deviceId;
     private LocationManager lm;
+    private String deviceId;
     private StompClient stompClient;
     private ObjectMapper mapper;
 
@@ -53,17 +53,12 @@ public class LocationTrackerActivity extends AppCompatActivity implements Locati
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        requestPermissions();
-        idView = this.findViewById(R.id.id_text);
 
         latView = this.findViewById(R.id.location_lat_val);
         lonView = this.findViewById(R.id.location_lon_val);
         altView = this.findViewById(R.id.location_alt_val);
 
-        if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED) {
-            fillDeviceId();
-        }
+        deviceId = getIntent().getStringExtra("deviceId");
 
         enableLocation();
 
@@ -75,44 +70,23 @@ public class LocationTrackerActivity extends AppCompatActivity implements Locati
 
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+//    @Override
+//    public void onRequestPermissionsResult(int requestCode,
+//                                           String permissions[], int[] grantResults) {
+//
+//        PermissionCodes code = PermissionCodes.byCode(requestCode);
+//        switch (code) {
+//            case LOCATION:
+//                if (grantResults.length > 0
+//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+//                    enableLocation();
+//                }
+//                break;
+//        }
+//    }
 
-        PermissionCodes code = PermissionCodes.byCode(requestCode);
-        switch (code) {
-            case LOCATION:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    fillDeviceId();
-                    enableLocation();
-                }
-                break;
-        }
-    }
 
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
 
     @Override
     public void onLocationChanged(Location location) {
@@ -146,45 +120,6 @@ public class LocationTrackerActivity extends AppCompatActivity implements Locati
 
     }
 
-    private void requestPermissions() {
-        String[] permissions = new String[]{
-                Manifest.permission.READ_PHONE_STATE,
-                Manifest.permission.ACCESS_FINE_LOCATION};
-
-        int result;
-        List<String> listPermissionsNeeded = new ArrayList<>();
-        for (String p : permissions) {
-            result = checkSelfPermission(p);
-            if (result != PackageManager.PERMISSION_GRANTED) {
-                listPermissionsNeeded.add(p);
-            }
-        }
-        if (!listPermissionsNeeded.isEmpty()) {
-            requestPermissions(listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]),
-                    PermissionCodes.LOCATION.getCode());
-        }
-
-
-    }
-
-    @SuppressLint("HardwareIds")
-    private String getDeviceId() {
-        try {
-            final TelephonyManager tm = (TelephonyManager) getBaseContext().getSystemService(Context.TELEPHONY_SERVICE);
-
-            final String tmDevice, tmSerial, androidId;
-            tmDevice = "" + tm.getImei();
-            tmSerial = "" + tm.getSimSerialNumber();
-            androidId = "" + android.provider.Settings.Secure.getString(getContentResolver(),
-                    android.provider.Settings.Secure.ANDROID_ID);
-
-            UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-            return deviceUuid.toString();
-        } catch (SecurityException ex) {
-            Log.e(ACTIVITY_SERVICE, "getDeviceId: ", ex);
-        }
-        return "id is not available";
-    }
 
 
     private String convertToString(double val) {
@@ -218,10 +153,6 @@ public class LocationTrackerActivity extends AppCompatActivity implements Locati
         super.onDestroy();
     }
 
-    private void fillDeviceId(){
-        deviceId = getDeviceId();
-        idView.append(deviceId);
-    }
 
     private void enableLocation(){
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)

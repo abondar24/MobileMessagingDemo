@@ -1,14 +1,17 @@
-package org.abondar.experimental.messagingclient;
+package org.abondar.experimental.messagingclient.activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -18,16 +21,10 @@ import java.util.UUID;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
+import org.abondar.experimental.messagingclient.R;
 import org.abondar.experimental.messagingclient.util.PermissionCodes;
 
-import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
-
-import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_ENDPOINT;
-import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_URI;
-import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_PORT;
 
 
 public class MainActivity extends AppCompatActivity  {
@@ -35,8 +32,8 @@ public class MainActivity extends AppCompatActivity  {
 
     private TextView idView;
     private String deviceId;
-    private StompClient stompClient;
-    private ObjectMapper mapper;
+    private Button motionButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,20 +44,24 @@ public class MainActivity extends AppCompatActivity  {
         setSupportActionBar(toolbar);
 
         requestPermissions();
+
+
         idView = this.findViewById(R.id.id_text);
+        Button locationButton = this.findViewById(R.id.location_button);
+        motionButton = this.findViewById(R.id.motion_button);
 
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
-        fillDeviceId();
+          fillDeviceId();
         }
 
-      mapper = new ObjectMapper();
-        stompClient = Stomp.over(Stomp.ConnectionProvider.JWS,
-                STOMP_URI + STOMP_PORT + STOMP_ENDPOINT);
-        stompClient.connect();
-
-
+        locationButton.setOnClickListener(v -> {
+            Intent locationIntent = new Intent(MainActivity.this,LocationActivity.class);
+            locationIntent.putExtra("deviceId",deviceId);
+            startActivity(locationIntent);
+        });
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -144,16 +145,10 @@ public class MainActivity extends AppCompatActivity  {
 
 
 
-    @Override
-    public void onDestroy() {
-        stompClient.disconnect();
-        super.onDestroy();
-    }
-
     private void fillDeviceId(){
         deviceId = getDeviceId();
         idView.append(deviceId);
-    }
 
+    }
 
 }
