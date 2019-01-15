@@ -5,9 +5,12 @@
     <string name="location_lat">Device Latitude: </string>
     <string name="location_lon">Device Longitude: </string>
     <string name="location_alt">Device Altitude: </string>
-    <string name="location_val_def">No data available</string>
+    <string name="value_default">No data available</string>
     <string name="location_button">Track location</string>
     <string name="motion_button">Detect motions</string>
+    <string name="motion_pitch">Pitch(x): </string>
+    <string name="motion_roll">Roll(y): </string>
+    <string name="motion_yaw">Yaw(z): </string>
     <string name="content_authority">org.abondar.experimental.messagingclient</string>
     <string name="sync_account_type">messagingclient.abondar.org</string>
 

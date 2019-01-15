@@ -28,7 +28,7 @@
             android:layout_alignBaseline="@+id/location_lat"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/location_lat"
-            android:text="@string/location_val_def"/>
+            android:text="@string/value_default"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -48,7 +48,7 @@
             android:layout_alignBaseline="@+id/location_lon"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/location_lon"
-            android:text="@string/location_val_def"/>
+            android:text="@string/value_default"/>
     </RelativeLayout>
 
     <RelativeLayout
@@ -70,7 +70,7 @@
             android:layout_alignBaseline="@+id/location_alt"
             android:layout_marginStart="10dp"
             android:layout_toEndOf="@+id/location_alt"
-            android:text="@string/location_val_def"
+            android:text="@string/value_default"
             />
     </RelativeLayout>
 

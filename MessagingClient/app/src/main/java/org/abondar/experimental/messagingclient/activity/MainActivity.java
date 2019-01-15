@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity  {
 
     private TextView idView;
     private String deviceId;
-    private Button motionButton;
+
 
 
     @Override
@@ -48,17 +48,24 @@ public class MainActivity extends AppCompatActivity  {
 
         idView = this.findViewById(R.id.id_text);
         Button locationButton = this.findViewById(R.id.location_button);
-        motionButton = this.findViewById(R.id.motion_button);
+        Button motionButton = this.findViewById(R.id.motion_button);
 
         if (checkSelfPermission(Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED) {
           fillDeviceId();
         }
 
+
         locationButton.setOnClickListener(v -> {
             Intent locationIntent = new Intent(MainActivity.this,LocationActivity.class);
             locationIntent.putExtra("deviceId",deviceId);
             startActivity(locationIntent);
+        });
+
+        motionButton.setOnClickListener(v -> {
+            Intent motionIntent = new Intent(MainActivity.this,MotionActivity.class);
+            motionIntent.putExtra("deviceId",deviceId);
+            startActivity(motionIntent);
         });
     }
 

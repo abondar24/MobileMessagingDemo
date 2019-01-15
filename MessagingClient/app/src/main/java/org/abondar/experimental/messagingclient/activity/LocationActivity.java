@@ -1,17 +1,13 @@
 package org.abondar.experimental.messagingclient.activity;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,18 +19,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.abondar.experimental.messagingclient.R;
 import org.abondar.experimental.messagingclient.data.LocationData;
 import org.abondar.experimental.messagingclient.util.ConnectionUtil;
-import org.abondar.experimental.messagingclient.util.PermissionCodes;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_ENDPOINT;
+import static org.abondar.experimental.messagingclient.util.ConnectionUtil.ENDPOINT;
 import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_PORT;
-import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_URI;
+import static org.abondar.experimental.messagingclient.util.ConnectionUtil.URI;
 
 public class LocationActivity extends AppCompatActivity implements LocationListener {
     private TextView latView;
@@ -64,28 +55,11 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
 
         mapper = new ObjectMapper();
         stompClient = Stomp.over(Stomp.ConnectionProvider.JWS,
-                STOMP_URI + STOMP_PORT + STOMP_ENDPOINT);
+                URI + STOMP_PORT + ENDPOINT);
         stompClient.connect();
 
 
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode,
-//                                           String permissions[], int[] grantResults) {
-//
-//        PermissionCodes code = PermissionCodes.byCode(requestCode);
-//        switch (code) {
-//            case LOCATION:
-//                if (grantResults.length > 0
-//                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    enableLocation();
-//                }
-//                break;
-//        }
-//    }
-
-
 
 
     @Override
@@ -145,6 +119,12 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
                 Log.i(ACTIVITY_SERVICE, "Sent to broker "+locationData));
 
 
+    }
+
+    @Override
+    public void onPause(){
+        stompClient.disconnect();
+        super.onPause();
     }
 
     @Override

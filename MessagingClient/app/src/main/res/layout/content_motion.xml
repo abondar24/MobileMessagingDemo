@@ -10,4 +10,67 @@
     tools:showIn="@layout/motion_activity">
 
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/motion_pitch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/motion_pitch" />
+        <TextView
+            android:id="@+id/motion_pitch_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/motion_pitch"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/motion_pitch"
+            android:text="@string/value_default"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/motion_roll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/motion_roll"/>
+        <TextView
+            android:id="@+id/motion_roll_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/motion_roll"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/motion_roll"
+            android:text="@string/value_default"/>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/motion_yaw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/motion_yaw" />
+
+        <TextView
+            android:id="@+id/motion_yaw_val"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/motion_yaw"
+            android:layout_marginStart="10dp"
+            android:layout_toEndOf="@+id/motion_yaw"
+            android:text="@string/value_default"
+            />
+    </RelativeLayout>
+
 </LinearLayout>
