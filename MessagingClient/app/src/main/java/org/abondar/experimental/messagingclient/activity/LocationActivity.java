@@ -2,6 +2,7 @@ package org.abondar.experimental.messagingclient.activity;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -41,8 +42,14 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.location_activity);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.location_toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(view -> {
+            Intent backIntent = new Intent(LocationActivity.this, MainActivity.class);
+            startActivity(backIntent);
+        });
 
 
         latView = this.findViewById(R.id.location_lat_val);

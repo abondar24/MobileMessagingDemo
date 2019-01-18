@@ -1,5 +1,6 @@
 package org.abondar.experimental.messagingclient.activity;
 
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -29,8 +30,15 @@ public class MotionActivity extends AppCompatActivity implements SensorEventList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.motion_activity);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.motion_toolbar);
         setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back);
+
+        toolbar.setNavigationOnClickListener(view -> {
+            Intent backIntent = new Intent(MotionActivity.this, MainActivity.class);
+            startActivity(backIntent);
+
+        });
 
         deviceId = getIntent().getStringExtra("deviceId");
 
@@ -85,5 +93,5 @@ public class MotionActivity extends AppCompatActivity implements SensorEventList
 
     }
 
-    ;
+
 }
