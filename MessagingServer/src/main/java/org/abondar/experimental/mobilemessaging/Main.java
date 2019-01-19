@@ -28,7 +28,7 @@ public class Main {
 
 
     @Autowired
-    public void setStompComponent(JmsComponent jmsComponent){
+    public void setJmsComponent(JmsComponent jmsComponent){
         Main.jmsComponent = jmsComponent;
     }
 

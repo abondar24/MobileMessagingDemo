@@ -151,15 +151,7 @@ public class MotionActivity extends AppCompatActivity implements SensorEventList
             Log.e(ACTIVITY_SERVICE, "JSON exception: "+ex.getMessage());
         }
 
-        byte[] res = new byte[json.length()];
-
-        try {
-          res = IOUtils.toByteArray(json);
-        } catch (IOException ex) {
-            Log.e(ACTIVITY_SERVICE, "Byte array exception: "+ex.getMessage());
-        }
-
-        return res;
+        return json.getBytes();
     }
 
     private MqttCallback initCallback(){
