@@ -24,9 +24,9 @@ import org.abondar.experimental.messagingclient.util.ConnectionUtil;
 import ua.naiksoftware.stomp.Stomp;
 import ua.naiksoftware.stomp.client.StompClient;
 
-import static org.abondar.experimental.messagingclient.util.ConnectionUtil.ENDPOINT;
+import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_ENDPOINT;
 import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_PORT;
-import static org.abondar.experimental.messagingclient.util.ConnectionUtil.URI;
+import static org.abondar.experimental.messagingclient.util.ConnectionUtil.STOMP_URI;
 
 public class LocationActivity extends AppCompatActivity implements LocationListener {
     private TextView latView;
@@ -62,7 +62,7 @@ public class LocationActivity extends AppCompatActivity implements LocationListe
 
         mapper = new ObjectMapper();
         stompClient = Stomp.over(Stomp.ConnectionProvider.JWS,
-                URI + STOMP_PORT + ENDPOINT);
+                STOMP_URI + STOMP_PORT + STOMP_ENDPOINT);
         stompClient.connect();
 
 

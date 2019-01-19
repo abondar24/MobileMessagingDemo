@@ -1,10 +1,26 @@
 package org.abondar.experimental.messagingclient.data;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+
+@JsonPropertyOrder({
+        "id",
+        "pitch",
+        "roll",
+        "yaw"
+})
 public class MotionData {
 
+    @JsonProperty("id")
     private String deviceId;
+
+    @JsonProperty("pitch")
     private float pitch;
+
+    @JsonProperty("roll")
     private float roll;
+
+    @JsonProperty("yaw")
     private float yaw;
 
     public MotionData(float pitch, float roll, float yaw) {
