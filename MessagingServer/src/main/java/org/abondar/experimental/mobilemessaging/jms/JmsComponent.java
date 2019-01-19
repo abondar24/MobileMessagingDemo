@@ -33,6 +33,11 @@ public class JmsComponent {
         printMessage(msg);
     }
 
+    @JmsListener(destination = "${jsa.activemq.topic.mqtt.alert}")
+    public void receiveAlertMessage(final BytesMessage msg) throws Exception {
+        printMessage(msg);
+    }
+
 
     @SendTo("${jsa.activemq.topic.stomp}")
     public String sendMessage(LocationData msg) throws Exception {
