@@ -65,7 +65,7 @@ public class MotionActivity extends AppCompatActivity implements SensorEventList
         sensor = sm.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
 
         try {
-            mqttClient = new MqttClient(ConnectionUtil.MQTT_URI +ConnectionUtil.MQTT_PORT,
+            mqttClient = new MqttClient(ConnectionUtil.URI +ConnectionUtil.WS_PORT,
                     ConnectionUtil.MQTT_CLIENT_ID,new MemoryPersistence());
         } catch (MqttException ex){
             Log.e(ACTIVITY_SERVICE,"Exception while creating mqtt client: "+ex.getMessage());
