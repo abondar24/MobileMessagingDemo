@@ -8,6 +8,7 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -158,7 +159,15 @@ public class MotionActivity extends AppCompatActivity implements SensorEventList
 
             @Override
             public void messageArrived(String topic, MqttMessage message) {
-               Log.i(ACTIVITY_SERVICE,"Got message: "+message.toString()+ "from topic: "+topic);
+               String msgContent = message.toString();
+               Log.i(ACTIVITY_SERVICE,"Got message: "+msgContent+ "from topic: "+topic);
+
+               if (ConnectionUtil.MQTT_ALERT_MESSAGE.equals(msgContent)){
+                   Log.i(ACTIVITY_SERVICE,msgContent);
+                   MotionActivity.this.runOnUiThread(
+                           () -> Toast.makeText(MotionActivity.this,msgContent,Toast.LENGTH_SHORT).show());
+
+               }
             }
 
             @Override

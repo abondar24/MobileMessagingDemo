@@ -7,6 +7,7 @@ public class ConnectionUtil {
 
     public static final String MQTT_TOPIC ="mqtt/topic";
     public static final String MQTT_ALERT ="mqtt/alert/topic";
+    public static final String MQTT_ALERT_MESSAGE = "Device alert";
     public static final String MQTT_CLIENT_ID = "MessagingClient";
     public static final Integer MQTT_QOS=2;
 
