@@ -38,30 +38,23 @@ public class JmsComponent {
         printMessage(msg);
     }
 
-
     @SendTo("${jsa.activemq.topic.stomp}")
-    public String sendMessage(LocationData msg) throws Exception {
+    public void sendMessage(LocationData msg) throws Exception {
         var jsonMsg = om.writeValueAsString(msg);
         logger.info("Sending to broker: " + jsonMsg);
-        return jsonMsg;
     }
-
 
     private void printMessage(BytesMessage msg) throws JMSException{
         byte[] data = new byte[(int) msg.getBodyLength()];
         msg.readBytes(data);
 
-        String msgText = new String(data);
-
+        var msgText = new String(data);
         logger.info("Got message from broker: " + msgText);
 
     }
 
     private void printMessage(TextMessage msg) throws JMSException, IOException {
-        String data;
-
-        data = msg.getText();
-
+        var data = msg.getText();
         var test = om.readValue(data, LocationData.class);
         logger.info("Got message from broker: " + test);
 
