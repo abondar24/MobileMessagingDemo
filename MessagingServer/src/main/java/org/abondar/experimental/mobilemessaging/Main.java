@@ -1,14 +1,16 @@
 package org.abondar.experimental.mobilemessaging;
 
-import org.abondar.experimental.mobilemessaging.jms.JmsComponent;
+import org.abondar.experimental.mobilemessaging.jms.*;
 import org.abondar.experimental.mobilemessaging.model.LocationData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.*;
 import org.springframework.jms.annotation.EnableJms;
 
 @SpringBootApplication
 @EnableJms
+@Import({JmsConnectionConfig.class})
 public class Main {
 
 
